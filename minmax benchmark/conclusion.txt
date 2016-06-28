@@ -1,0 +1,2 @@
+same performance.
+std::minmax is more compact
