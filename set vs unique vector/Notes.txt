@@ -1,0 +1,2 @@
+set and unique verctor don't do the same thing!
+std::unique only removes consecutive duplicates
