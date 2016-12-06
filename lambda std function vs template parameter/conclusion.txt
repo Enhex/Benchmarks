@@ -1,0 +1,2 @@
+- std::function uses type erasure which prevents inlining, therefore it's slower than manually written functions and lambdas as template parameters.
+- Using lambdas as template parameters has the exact same performance as manually written functions. Both compile into the same assembly.
