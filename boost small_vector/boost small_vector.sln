@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boost small_vector", "boost small_vector.vcxproj", "{37394262-231D-03B8-8C7D-FD0A7880ED39}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boost small_vector_elements", "boost small_vector_elements.vcxproj", "{B3D05622-1FDE-8408-A8C4-80F314D150BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37394262-231D-03B8-8C7D-FD0A7880ED39}.Debug|Win32.ActiveCfg = Debug|Win32
+		{37394262-231D-03B8-8C7D-FD0A7880ED39}.Debug|Win32.Build.0 = Debug|Win32
+		{37394262-231D-03B8-8C7D-FD0A7880ED39}.Release|Win32.ActiveCfg = Release|Win32
+		{37394262-231D-03B8-8C7D-FD0A7880ED39}.Release|Win32.Build.0 = Release|Win32
+		{B3D05622-1FDE-8408-A8C4-80F314D150BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3D05622-1FDE-8408-A8C4-80F314D150BF}.Debug|Win32.Build.0 = Debug|Win32
+		{B3D05622-1FDE-8408-A8C4-80F314D150BF}.Release|Win32.ActiveCfg = Release|Win32
+		{B3D05622-1FDE-8408-A8C4-80F314D150BF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
