@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "image loading", "image loading.vcxproj", "{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flif_lib_dec", "..\..\FLIF\FLIF\build\flif_lib_dec.vcxproj", "{1FF497AA-70C3-3641-B1C6-6431B1F123F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		MinSizeRel|Win32 = MinSizeRel|Win32
+		Release|Win32 = Release|Win32
+		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.Debug|Win32.Build.0 = Debug|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.MinSizeRel|Win32.Build.0 = Release|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.Release|Win32.ActiveCfg = Release|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.Release|Win32.Build.0 = Release|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{066CDBFB-722C-5732-3B67-A0AFA7E69B0E}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.Debug|Win32.Build.0 = Debug|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.Release|Win32.ActiveCfg = Release|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.Release|Win32.Build.0 = Release|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{1FF497AA-70C3-3641-B1C6-6431B1F123F0}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
