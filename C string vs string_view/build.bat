@@ -1,0 +1,1 @@
+premake5 vs2017 --name="C string vs string_view" --celero-include=E:/Celero/Celero/include --celero-lib=E:/Celero/Build/Release/celero.lib --celero-lib-d=E:/Celero/Build/Debug/celerod.lib
