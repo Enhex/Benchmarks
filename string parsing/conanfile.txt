@@ -1,0 +1,8 @@
+[requires]
+boost_spirit/1.66.0@bincrafters/stable
+fmt/4.1.0@bincrafters/stable
+
+premake_generator/master@enhex/stable
+
+[generators]
+premake

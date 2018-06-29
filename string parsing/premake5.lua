@@ -23,14 +23,20 @@ newoption {
 	description	= "Celero debug library path",
 }
 
+location_dir = "build/"
+
+include(location_dir .. "conanpremake.lua")
 
 workspace(_OPTIONS["name"])
-	configurations { "Debug", "Release" }
+	location(location_dir)
+	configurations { conan_build_type }
+	architecture(conan_arch)
 	
 project(_OPTIONS["name"])
 	kind "ConsoleApp"
 	language "C++"
-	targetdir "bin/%{cfg.buildcfg}"
+	cppdialect "C++17"
+	targetdir = location_dir .. "bin/%{cfg.buildcfg}"
 
 	files { "**.h", "**.cpp" }
 
@@ -39,14 +45,19 @@ project(_OPTIONS["name"])
 		defines{"WIN32", "_WINDOWS"}
 		links{"PowrProf.lib"}
 	end
-	includedirs{_OPTIONS["celero-include"]}
+	includedirs{
+		_OPTIONS["celero-include"],
+		conan_includedirs
+	}
+	
+	libdirs{conan_libdirs}
 
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		symbols "On"
-		links{_OPTIONS["celero-lib-d"]}
+		links{conan_libs, _OPTIONS["celero-lib-d"]}
 
 	filter "configurations:Release"
 		defines { "NDEBUG" }
 		optimize "On"
-		links{_OPTIONS["celero-lib"]}
+		links{conan_libs, _OPTIONS["celero-lib"]}
