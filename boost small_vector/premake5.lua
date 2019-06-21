@@ -1,78 +1,37 @@
 newoption {
-	trigger		= "name",
-	value		= "string",
-	description	= "Name to be used for the workspace and project",
-	default		= "CeleroTemplate",
+	trigger     = "location",
+	value       = "./",
+	description = "Where to generate the project.",
 }
 
-newoption {
-	trigger		= "celero-include",
-	value		= "path",
-	description	= "Celero include path",
-}
+if not _OPTIONS["location"] then
+	_OPTIONS["location"] = "./"
+end
 
-newoption {
-	trigger		= "celero-lib",
-	value		= "path",
-	description	= "Celero release library path",
-}
+include(_OPTIONS["location"] .. "conanpremake.lua")
 
-newoption {
-	trigger		= "celero-lib-d",
-	value		= "path",
-	description	= "Celero debug library path",
-}
+project_name = "boost small_vector"
 
+workspace(project_name)
+	location(_OPTIONS["location"])
+	conan_basic_setup()
 
-workspace(_OPTIONS["name"])
-	configurations { "Debug", "Release" }
-	includedirs{"E:/boost/boost_1_63_0"}
+	project(project_name)
+		kind "StaticLib"
+		language "C++"
+		cppdialect "C++17"
+		targetdir = "bin/%{cfg.buildcfg}"
 
-project(_OPTIONS["name"])
-	kind "ConsoleApp"
-	language "C++"
-	targetdir "bin/%{cfg.buildcfg}"
+		files{
+			"src/**",
+		}
 
-	files { "**.h", "Source.cpp" }
+		defines{"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"}
 
-	defines { "_VARIADIC_MAX=10", "CELERO_STATIC", "_MBCS" }
-	if os.is("windows") then
-		defines{"WIN32", "_WINDOWS"}
-		links{"PowrProf.lib"}
-	end
-	includedirs{_OPTIONS["celero-include"]}
+		filter "configurations:Debug"
+			defines { "DEBUG" }
+			symbols "On"
 
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		symbols "On"
-		links{_OPTIONS["celero-lib-d"]}
-
-	filter "configurations:Release"
-		defines { "NDEBUG" }
-		optimize "On"
-		links{_OPTIONS["celero-lib"]}
-	
-
-project(_OPTIONS["name"].."_elements")
-	kind "ConsoleApp"
-	language "C++"
-	targetdir "bin/%{cfg.buildcfg}"
-
-	files { "**.h", "elements.cpp" }
-
-	defines { "_VARIADIC_MAX=10", "CELERO_STATIC", "_MBCS" }
-	if os.is("windows") then
-		defines{"WIN32", "_WINDOWS"}
-		links{"PowrProf.lib"}
-	end
-	includedirs{_OPTIONS["celero-include"]}
-
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		symbols "On"
-		links{_OPTIONS["celero-lib-d"]}
-
-	filter "configurations:Release"
-		defines { "NDEBUG" }
-		optimize "On"
-		links{_OPTIONS["celero-lib"]}
+		filter "configurations:Release"
+			defines { "NDEBUG" }
+			optimize "On"

@@ -46,9 +46,9 @@ BASELINE_F(1_check, if_check, BaseFixture, g_samples, g_iterations)
 	int a = random();
 	int b = random();
 	if (divide_check(a, b))
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	else
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 }
 
 
@@ -59,11 +59,11 @@ BENCHMARK_F(1_check, exception, BaseFixture, g_samples, g_iterations)
 	try
 	{
 		divide_exception(a, b);
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	}
 	catch(...)
 	{
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 	}
 }
 
@@ -74,9 +74,9 @@ BASELINE_F(2_check, if_check, BaseFixture, g_samples, g_iterations)
 	int b = random();
 	if (divide_check(a, b) &&
 		divide_check(a, b))
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	else
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 }
 
 
@@ -88,11 +88,11 @@ BENCHMARK_F(2_check, exception, BaseFixture, g_samples, g_iterations)
 	{
 		divide_exception(a, b);
 		divide_exception(a, b);
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	}
 	catch (...)
 	{
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 	}
 }
 
@@ -105,9 +105,9 @@ BASELINE_F(4_check, if_check, BaseFixture, g_samples, g_iterations)
 		divide_check(a, b) &&
 		divide_check(a, b) &&
 		divide_check(a, b))
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	else
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 }
 
 
@@ -121,11 +121,11 @@ BENCHMARK_F(4_check, exception, BaseFixture, g_samples, g_iterations)
 		divide_exception(a, b);
 		divide_exception(a, b);
 		divide_exception(a, b);
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	}
 	catch (...)
 	{
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 	}
 }
 
@@ -142,9 +142,9 @@ BASELINE_F(8_check, if_check, BaseFixture, g_samples, g_iterations)
 		divide_check(a, b) &&
 		divide_check(a, b) &&
 		divide_check(a, b))
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	else
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 }
 
 
@@ -162,11 +162,11 @@ BENCHMARK_F(8_check, exception, BaseFixture, g_samples, g_iterations)
 		divide_exception(a, b);
 		divide_exception(a, b);
 		divide_exception(a, b);
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	}
 	catch (...)
 	{
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 	}
 }
 
@@ -191,9 +191,9 @@ BASELINE_F(16_check, if_check, BaseFixture, g_samples, g_iterations)
 		divide_check(a, b) &&
 		divide_check(a, b) &&
 		divide_check(a, b))
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	else
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 }
 
 
@@ -219,11 +219,11 @@ BENCHMARK_F(16_check, exception, BaseFixture, g_samples, g_iterations)
 		divide_exception(a, b);
 		divide_exception(a, b);
 		divide_exception(a, b);
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	}
 	catch (...)
 	{
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 	}
 }
 
@@ -264,9 +264,9 @@ BASELINE_F(32_check, if_check, BaseFixture, g_samples, g_iterations)
 		divide_check(a, b) &&
 		divide_check(a, b) &&
 		divide_check(a, b))
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	else
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 }
 
 
@@ -308,10 +308,10 @@ BENCHMARK_F(32_check, exception, BaseFixture, g_samples, g_iterations)
 		divide_exception(a, b);
 		divide_exception(a, b);
 		divide_exception(a, b);
-		a += b;
+		celero::DoNotOptimizeAway(a += b);
 	}
 	catch (...)
 	{
-		b += a;
+		celero::DoNotOptimizeAway(b += a);
 	}
 }

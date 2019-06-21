@@ -11,7 +11,7 @@
 ///
 CELERO_MAIN
 
-constexpr int g_samples = 20;
+constexpr int g_samples = 200;
 constexpr int g_iterations = 1000000;
 
 std::mt19937 rng;

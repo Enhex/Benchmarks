@@ -1,0 +1,5 @@
+[requires]
+boost_container/1.66.0@bincrafters/stable
+
+[generators]
+premake

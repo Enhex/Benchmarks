@@ -9,8 +9,8 @@
 ///
 CELERO_MAIN
 
-constexpr int g_samples = 50;
-constexpr int g_iterations = 2000000;
+constexpr int g_samples = 100;
+constexpr int g_iterations = 1000000;
 
 std::mt19937 rng;
 auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
