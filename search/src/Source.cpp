@@ -27,13 +27,13 @@ class baseFixture : public celero::TestFixture
 public:
 	std::vector<int> find_elements;
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
 		const int totalNumberOfTests = 20;
 
 		for (int i = 1; i <= totalNumberOfTests; ++i)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+			problemSpace.emplace_back(int64_t(pow(2, i)));
 
 		return problemSpace;
 	}
@@ -45,13 +45,13 @@ class unordered_setFixture : public baseFixture
 public:
 	std::unordered_set<int> set;
 
-	virtual void setUp(int64_t experimentValue)
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		rng.seed(0);
 
-		find_elements.reserve((size_t)experimentValue);
+		find_elements.reserve((size_t)experimentValue.Value);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
 			auto element = random();
 			set.emplace(element);
@@ -67,14 +67,14 @@ class unordered_setReservedFixture : public baseFixture
 public:
 	std::unordered_set<int> set;
 
-	virtual void setUp(int64_t experimentValue)
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		rng.seed(0);
 
-		set.reserve((size_t)experimentValue); // Might affect performance if it causes contiguous memory, which isn't the common use case for unordered_set
-		find_elements.reserve((size_t)experimentValue);
+		set.reserve((size_t)experimentValue.Value); // Might affect performance if it causes contiguous memory, which isn't the common use case for unordered_set
+		find_elements.reserve((size_t)experimentValue.Value);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
 			auto element = random();
 			set.emplace(element);
@@ -91,14 +91,14 @@ class setFixture : public baseFixture
 public:
 	std::set<int> set;
 
-	virtual void setUp(int64_t experimentValue)
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		rng.seed(0);
 
 		//set.reserve((size_t)experimentValue); // Might affect performance if it causes contiguous memory, which isn't the common use case for unordered_set
-		find_elements.reserve((size_t)experimentValue);
+		find_elements.reserve((size_t)experimentValue.Value);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
 			auto element = random();
 			set.emplace(element);
@@ -112,13 +112,13 @@ public:
 class setLimitedFixture : public setFixture
 {
 public:
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
 		const int totalNumberOfTests = 17;
 
 		for (int i = 1; i <= totalNumberOfTests; ++i)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+			problemSpace.emplace_back(int64_t(pow(2, i)), uint64_t(0));
 
 		return problemSpace;
 	}
@@ -137,7 +137,7 @@ public:
 		vec.reserve((size_t)experimentValue);	// vector is memory contiguous, so no performance change
 		find_elements.reserve((size_t)experimentValue);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue) i = 0; i < experimentValue; ++i)
 		{
 			vec.emplace_back(random());
 			find_elements.emplace_back(vec.back());
@@ -160,13 +160,13 @@ public:
 class vectorLimitedFixture : public vectorFixture
 {
 public:
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	virtual std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
 		const int totalNumberOfTests = 13;
 
 		for (int i = 1; i <= totalNumberOfTests; ++i)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+			problemSpace.emplace_back(int64_t(pow(2, i)), uint64_t(0));
 
 		return problemSpace;
 	}
