@@ -10,7 +10,7 @@
 
 CELERO_MAIN
 
-constexpr int g_samples = 10;
+constexpr int g_samples = 30;
 constexpr int g_iterations = 100;
 
 namespace io = boost::iostreams;
@@ -47,11 +47,11 @@ BENCHMARK(group, fread, g_samples, g_iterations)
 	rewind(pFile);
 
 	// allocate memory to contain the whole file:
-	char * buffer = new char[length + 1];
+	auto buffer = new char[length + 1];
 	buffer[length] = 0;
 
 	// copy the file into the buffer:
-	size_t result = fread(buffer, 1, length, pFile);
+	auto result = fread(buffer, 1, length, pFile);
 	//std::cout << buffer;
 
 	/* the whole file is now loaded in the memory buffer. */
@@ -71,7 +71,7 @@ BENCHMARK(group, fstream_buffer, g_samples, g_iterations)
 	int length = is.tellg();
 	is.seekg(0, is.beg);
 
-	char * buffer = new char[length + 1];
+	auto buffer = new char[length + 1];
 	buffer[length] = 0;
 
 	is.rdbuf()->pubsetbuf(buffer, length);

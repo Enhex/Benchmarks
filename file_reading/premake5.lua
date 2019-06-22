@@ -1,52 +1,41 @@
 newoption {
-	trigger		= "name",
-	value		= "string",
-	description	= "Name to be used for the workspace and project",
-	default		= "CeleroTemplate",
+	trigger     = "location",
+	value       = "./",
+	description = "Where to generate the project.",
 }
 
-newoption {
-	trigger		= "celero-include",
-	value		= "path",
-	description	= "Celero include path",
-}
+if not _OPTIONS["location"] then
+	_OPTIONS["location"] = "./"
+end
 
-newoption {
-	trigger		= "celero-lib",
-	value		= "path",
-	description	= "Celero release library path",
-}
+location_dir = _OPTIONS["location"]
 
-newoption {
-	trigger		= "celero-lib-d",
-	value		= "path",
-	description	= "Celero debug library path",
-}
+include(location_dir .. "conanbuildinfo.premake.lua")
 
+workspace("file_reading")
+	location(location_dir)
+	conan_basic_setup()
 
-workspace(_OPTIONS["name"])
-	configurations { "Debug", "Release" }
-	
-project(_OPTIONS["name"])
-	kind "ConsoleApp"
-	language "C++"
-	targetdir "bin/%{cfg.buildcfg}"
+	project("file_reading")
+		kind "ConsoleApp"
+		language "C++"
+		cppdialect "C++17"
+		targetdir = location_dir .. "bin/%{cfg.buildcfg}"
 
-	files { "**.h", "**.cpp" }
+		files{
+			"src/**",
+		}
 
-	defines { "_VARIADIC_MAX=10", "CELERO_STATIC", "_MBCS" }
-	if os.is("windows") then
-		defines{"WIN32", "_WINDOWS"}
-		links{"PowrProf.lib"}
-	end
-	includedirs{_OPTIONS["celero-include"]}
+		includedirs{
+			"src",
+		}
 
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		symbols "On"
-		links{_OPTIONS["celero-lib-d"]}
+		defines{"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"}
 
-	filter "configurations:Release"
-		defines { "NDEBUG" }
-		optimize "On"
-		links{_OPTIONS["celero-lib"]}
+		filter "configurations:Debug"
+			defines { "DEBUG" }
+			symbols "On"
+
+		filter "configurations:Release"
+			defines { "NDEBUG" }
+			optimize "On"
