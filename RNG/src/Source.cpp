@@ -17,7 +17,7 @@
 CELERO_MAIN
 
 constexpr int g_samples = 10;
-constexpr int g_iterations = 2000;
+constexpr int g_iterations = 1000;
 constexpr int g_loop = 10000;
 
 
