@@ -1,0 +1,7 @@
+[requires]
+Celero/master@enhex/stable
+eigen/3.3.7@conan/stable
+glm/0.9.9.4@g-truc/stable
+
+[generators]
+premake

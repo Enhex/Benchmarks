@@ -14,10 +14,12 @@
 ///
 CELERO_MAIN
 
-constexpr int g_samples = 40;
+constexpr int g_samples = 30;
 constexpr int g_iterations = 200000;
 
 std::mt19937 rng;
+
+constexpr int number_of_tests = 1;
 
 
 class GLM_Vec3Fixture : public celero::TestFixture
@@ -32,26 +34,26 @@ public:
 	std::vector<glm::vec3> vecs;
 
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
-		const int totalNumberOfTests = 1;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
+		const int totalNumberOfTests = number_of_tests;
 
-		for (int i = 0; i < totalNumberOfTests; i++)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+		//for (int i = 0; i < totalNumberOfTests; i++)
+		//	problemSpace.emplace_back(int64_t(pow(2, i)));
+		problemSpace.emplace_back(10);
 
 		return problemSpace;
 	}
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
-		experimentValue = 10;
-		vecs.reserve((unsigned)experimentValue);
+		vecs.reserve(experimentValue.Value);
 
 		auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 			vecs.emplace_back(random(), random(), random());
 	}
 };
@@ -68,26 +70,26 @@ public:
 	std::vector<glm::quat> quats;
 
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
-		const int totalNumberOfTests = 1;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
+		const int totalNumberOfTests = number_of_tests;
 
-		for (int i = 0; i < totalNumberOfTests; i++)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+		//for (int i = 0; i < totalNumberOfTests; i++)
+		//	problemSpace.emplace_back(int64_t(pow(2, i)));
+		problemSpace.emplace_back(10);
 
 		return problemSpace;
 	}
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
-		experimentValue = 10;
-		quats.reserve((unsigned)experimentValue);
+		quats.reserve(experimentValue.Value);
 
 		auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 			quats.emplace_back(random(), random(), random(), random());
 	}
 };
@@ -106,26 +108,26 @@ public:
 	std::vector<Eigen::Vector3f> vecs;
 
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
-		const int totalNumberOfTests = 1;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
+		const int totalNumberOfTests = number_of_tests;
 
-		for (int i = 0; i < totalNumberOfTests; i++)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+		//for (int i = 0; i < totalNumberOfTests; i++)
+		//	problemSpace.emplace_back(int64_t(pow(2, i)));
+		problemSpace.emplace_back(10);
 
 		return problemSpace;
 	}
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
-		experimentValue = 10;
-		vecs.reserve((unsigned)experimentValue);
+		vecs.reserve(experimentValue.Value);
 
 		auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 			vecs.emplace_back(random(), random(), random());
 	}
 };
@@ -143,26 +145,26 @@ public:
 	std::vector<Eigen::Vector4f, Eigen::aligned_allocator<Eigen::Vector4f>> vecs;
 
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
-		const int totalNumberOfTests = 1;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
+		const int totalNumberOfTests = 4;
 
-		for (int i = 0; i < totalNumberOfTests; i++)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+		//for (int i = 0; i < totalNumberOfTests; i++)
+		//	problemSpace.emplace_back(int64_t(pow(2, i)));
+		problemSpace.emplace_back(10);
 
 		return problemSpace;
 	}
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
-		experimentValue = 10;
-		vecs.reserve((unsigned)experimentValue);
+		vecs.reserve(experimentValue.Value);
 
 		auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 			vecs.emplace_back(random(), random(), random(), random());
 	}
 };
@@ -181,26 +183,26 @@ public:
 	std::vector<Eigen::Quaternionf, Eigen::aligned_allocator<Eigen::Quaternionf>> quats;
 
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
 		const int totalNumberOfTests = 1;
 
-		for (int i = 0; i < totalNumberOfTests; i++)
-			problemSpace.push_back(std::make_pair(int64_t(pow(2, i)), uint64_t(0)));
+		//for (int i = 0; i < totalNumberOfTests; i++)
+		//	problemSpace.emplace_back(int64_t(pow(2, i)));
+		problemSpace.emplace_back(10);
 
 		return problemSpace;
 	}
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
-		experimentValue = 10;
-		quats.reserve((unsigned)experimentValue);
+		quats.reserve(experimentValue.Value);
 
 		auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
 
-		for (size_t i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 			quats.emplace_back(random(), random(), random(), random());
 	}
 };
@@ -208,10 +210,6 @@ public:
 
 BASELINE_F(Vector3_addition, GLM, GLM_Vec3Fixture, g_samples, g_iterations)
 {
-	/*auto result = vecs[0];
-	for(auto& vec : vecs)
-		celero::DoNotOptimizeAway(result += vec);*/
-
 	celero::DoNotOptimizeAway(vecs[0] + vecs[1]);
 }
 
