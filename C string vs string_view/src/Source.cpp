@@ -6,7 +6,7 @@
 CELERO_MAIN
 
 constexpr int g_samples = 1000;
-constexpr int g_iterations = 1000;
+constexpr int g_iterations = 10000;
 
 using namespace std;
 
