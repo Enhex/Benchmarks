@@ -13,7 +13,11 @@ constexpr int g_samples = 100;
 constexpr int g_iterations = 1000000;
 
 std::mt19937 rng;
-auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
+std::uniform_real_distribution<float> rng_dist(std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
+
+auto random = [&](){
+	return rng_dist(rng);
+};
 
 
 class A
@@ -51,7 +55,7 @@ public:
 	A x;
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
 		x.alias = random();
 	}
@@ -69,7 +73,7 @@ public:
 	B x;
 
 	/// Before each run, build a vector of random integers.
-	virtual void setUp(int64_t experimentValue)
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
 	{
 		x.array[0] = random();
 	}
