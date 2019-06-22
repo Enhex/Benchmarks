@@ -1,4 +1,14 @@
-location_dir = "../../build/search/"
+newoption {
+	trigger     = "location",
+	value       = "./",
+	description = "Where to generate the project.",
+}
+
+if not _OPTIONS["location"] then
+	_OPTIONS["location"] = "./"
+end
+
+location_dir = _OPTIONS["location"]
 
 include(location_dir .. "conanbuildinfo.premake.lua")
 

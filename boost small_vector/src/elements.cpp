@@ -5,8 +5,8 @@ using namespace boost::container;
 
 CELERO_MAIN
 
-constexpr int g_samples = 25;
-constexpr int g_iterations = 1000;
+constexpr int g_samples = 30;
+constexpr int g_iterations = 10000;
 
 
 class Fixture : public celero::TestFixture
@@ -14,20 +14,20 @@ class Fixture : public celero::TestFixture
 public:
 	unsigned factor;
 
-	virtual std::vector<std::pair<int64_t, uint64_t>> getExperimentValues() const override
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
-		std::vector<std::pair<int64_t, uint64_t>> problemSpace;
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
 		constexpr int64_t totalNumberOfTests = 256;
 
 		for (int64_t i = 1; i <= totalNumberOfTests; ++i)
-			problemSpace.push_back(std::make_pair(i, 0));
+			problemSpace.emplace_back(i);
 
 		return problemSpace;
 	}
 
 	virtual void setUp(int64_t experimentValue)
 	{
-		factor = experimentValue;
+		factor = (decltype(factor))experimentValue;
 	}
 };
 

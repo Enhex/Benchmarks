@@ -8,22 +8,53 @@ if not _OPTIONS["location"] then
 	_OPTIONS["location"] = "./"
 end
 
-include(_OPTIONS["location"] .. "conanpremake.lua")
+location_dir = _OPTIONS["location"]
+
+include(location_dir .. "conanbuildinfo.premake.lua")
 
 project_name = "boost small_vector"
 
 workspace(project_name)
-	location(_OPTIONS["location"])
+	location(location_dir)
 	conan_basic_setup()
 
 	project(project_name)
-		kind "StaticLib"
+		kind "ConsoleApp"
 		language "C++"
 		cppdialect "C++17"
-		targetdir = "bin/%{cfg.buildcfg}"
+		targetdir = location_dir .. "bin/%{cfg.buildcfg}"
 
 		files{
-			"src/**",
+			"src/Source.cpp",
+		}
+
+		includedirs{
+			"src",
+		}
+
+		defines{"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"}
+
+		filter "configurations:Debug"
+			defines { "DEBUG" }
+			symbols "On"
+
+		filter "configurations:Release"
+			defines { "NDEBUG" }
+			optimize "On"
+
+
+	project(project_name .. "_elements")
+		kind "ConsoleApp"
+		language "C++"
+		cppdialect "C++17"
+		targetdir = location_dir .. "bin/%{cfg.buildcfg}"
+
+		files{
+			"src/elements.cpp",
+		}
+
+		includedirs{
+			"src",
 		}
 
 		defines{"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"}
