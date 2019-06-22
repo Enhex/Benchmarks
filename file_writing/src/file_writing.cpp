@@ -6,14 +6,20 @@
 #include <iostream>
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
-#include <libcpuid.h>
+#include <cpuinfo.h>
 
+size_t l1_size = 0;
 
-cpu_id_t data;
+int main(int argc, char** argv)
+{
+	cpuinfo_initialize();
+	l1_size = cpuinfo_get_processor(0)->cache.l1d->size;
 
-CELERO_MAIN
+	celero::Run(argc, argv);
+	return 0;
+}
 
-constexpr int g_samples = 5;
+constexpr int g_samples = 10;
 constexpr int g_iterations = 100;
 
 
@@ -50,14 +56,9 @@ BENCHMARK(group, fstream_buf_cache, g_samples, g_iterations)
 {
 	std::ofstream s("test.txt", std::ifstream::binary);
 
-	if (cpu_identify(nullptr, &data) < 0) {
-		printf("Sorrry, CPU identification failed.\n");
-		printf("Error: %s\n", cpuid_error());
-	}
+	const auto length = l1_size;
 
-	const auto length = data.l1_data_cache * 1024;
-
-	char * buffer = new char[length];
+	auto buffer = new char[length];
 	s.rdbuf()->pubsetbuf(buffer, length);
 
 	s.write(content, content_size);
