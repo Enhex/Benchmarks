@@ -1,0 +1,6 @@
+[requires]
+Celero/master@enhex/stable
+boost/1.65.1@conan/stable
+
+[generators]
+premake
