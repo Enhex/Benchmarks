@@ -12,7 +12,7 @@ std::uniform_int_distribution<int> distribution(-1024, 1024);
 auto rand_int = std::bind(distribution, rng);
 
 unsigned g_samples = 10;
-unsigned g_iterations = 1;// 0000;
+unsigned g_iterations = 10000;
 
 
 // Accessing a member variable is a good use case for using a lambda since iterators can't be used.
