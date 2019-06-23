@@ -7,7 +7,7 @@
 #include <boost/spirit/include/qi_parse_auto.hpp>
 #include <boost/spirit/include/support_ascii.hpp>
 #include <celero/Celero.h>
-#include <fmt/string.h>
+#include <fmt/format.h>
 #include <limits>
 #include <random>
 #include <sstream>
@@ -59,7 +59,7 @@ using float_fixed_type = boost::spirit::karma::real_generator<double, fixed_poli
 auto const float_fixed = float_fixed_type();
 
 
-fmt::MemoryWriter g_w;
+fmt::memory_buffer g_buf;
 
 std::string naive_int_to_str(int x)
 {
@@ -166,8 +166,8 @@ struct IntFixture : celero::TestFixture
 {
 	int value;
 	std::string value_str;
-
-	void setUp(int64_t experimentValue) override
+	
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		value = random_int();
 		value_str = std::to_string(value);
@@ -179,7 +179,7 @@ struct FloatFixture : celero::TestFixture
 	float value;
 	std::string value_str;
 
-	void setUp(int64_t experimentValue) override
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		value = 12345.6789f;//random_float();
 		std::stringstream ss;
@@ -346,15 +346,16 @@ BENCHMARK_F(int_to_str, fmt_format, IntFixture, g_samples, g_iterations)
 #endif
 }
 
-BENCHMARK_F(int_to_str, fmt_writer, IntFixture, g_samples, g_iterations)
+BENCHMARK_F(int_to_str, fmt_buffer, IntFixture, g_samples, g_iterations)
 {
 	std::string s;
-	fmt::MemoryWriter w;
+	fmt::memory_buffer buf;
 
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-		s = (w << value).str()
+	format_to(buf, "{}", value);
+	s = buf.data();
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
@@ -365,33 +366,16 @@ BENCHMARK_F(int_to_str, fmt_writer, IntFixture, g_samples, g_iterations)
 #endif
 }
 
-BENCHMARK_F(int_to_str, fmt_writer_g, IntFixture, g_samples, g_iterations)
+BENCHMARK_F(int_to_str, fmt_buffer_g, IntFixture, g_samples, g_iterations)
 {
 	std::string s;
-	g_w.clear();
+	g_buf.clear();
 
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-		s = (g_w << value).str()
-#ifdef DO_NOT_OPTIMIZE
-	)
-#endif
-		;
-
-#ifdef INSPECT_OUTPUT
-	std::cout << s << std::endl;
-#endif
-}
-
-BENCHMARK_F(int_to_str, fmt_FormatInt, IntFixture, g_samples, g_iterations)
-{
-	std::string s;
-
-#ifdef DO_NOT_OPTIMIZE
-	celero::DoNotOptimizeAway(
-#endif
-		s = fmt::FormatInt(value).str()
+	format_to(g_buf, "{}", value);
+	s = g_buf.data();
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
@@ -606,15 +590,16 @@ BENCHMARK_F(float_to_str, fmt_format, FloatFixture, g_samples, g_iterations)
 #endif
 }
 
-BENCHMARK_F(float_to_str, fmt_writer, FloatFixture, g_samples, g_iterations)
+BENCHMARK_F(float_to_str, fmt_buffer, FloatFixture, g_samples, g_iterations)
 {
 	std::string s;
-	fmt::MemoryWriter w;
+	fmt::memory_buffer buf;
 
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-		s = (w << value).str()
+	format_to(buf, "{}", value);
+	s = buf.data();
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
@@ -625,15 +610,16 @@ BENCHMARK_F(float_to_str, fmt_writer, FloatFixture, g_samples, g_iterations)
 #endif
 }
 
-BENCHMARK_F(float_to_str, fmt_writer_g, FloatFixture, g_samples, g_iterations)
+BENCHMARK_F(float_to_str, fmt_buffer_g, FloatFixture, g_samples, g_iterations)
 {
 	std::string s;
-	g_w.clear();
+	g_buf.clear();
 
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-		s = (g_w << value).str()
+	format_to(g_buf, "{}", value);
+	s = g_buf.data();
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif

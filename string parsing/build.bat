@@ -1,7 +1,13 @@
-mkdir build
-cd build
+set source=%~dp0
 
-conan install ../
+set build_dir=build\string_parsing
 
-cd ..
-premake5 vs2017 --name=string_parsing --celero-include=E:/Celero/Celero/include --celero-lib=E:/Celero/build_64/Release/celero.lib --celero-lib-d=E:/Celero/build_64/Debug/celerod.lib
+cd ..\..
+mkdir %build_dir%
+cd %build_dir%
+
+REM conan install "%source%\" --build=outdated -s build_type=Debug -s arch=x86_64
+conan install "%source%\" --build=outdated -s arch=x86_64
+
+cd %source%
+premake5 vs2019 --location="../../%build_dir%/"

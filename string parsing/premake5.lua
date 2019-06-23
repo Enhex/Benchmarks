@@ -1,63 +1,43 @@
 newoption {
-	trigger		= "name",
-	value		= "string",
-	description	= "Name to be used for the workspace and project",
-	default		= "CeleroTemplate",
+	trigger     = "location",
+	value       = "./",
+	description = "Where to generate the project.",
 }
 
-newoption {
-	trigger		= "celero-include",
-	value		= "path",
-	description	= "Celero include path",
-}
+if not _OPTIONS["location"] then
+	_OPTIONS["location"] = "./"
+end
 
-newoption {
-	trigger		= "celero-lib",
-	value		= "path",
-	description	= "Celero release library path",
-}
+location_dir = _OPTIONS["location"]
 
-newoption {
-	trigger		= "celero-lib-d",
-	value		= "path",
-	description	= "Celero debug library path",
-}
+include(location_dir .. "conanbuildinfo.premake.lua")
 
-location_dir = "build/"
+project_name = "string_parsing"
 
-include(location_dir .. "conanpremake.lua")
-
-workspace(_OPTIONS["name"])
+workspace(project_name)
 	location(location_dir)
-	configurations { conan_build_type }
-	architecture(conan_arch)
-	
-project(_OPTIONS["name"])
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	targetdir = location_dir .. "bin/%{cfg.buildcfg}"
+	conan_basic_setup()
 
-	files { "**.h", "**.cpp" }
+	project(project_name)
+		kind "ConsoleApp"
+		language "C++"
+		cppdialect "C++17"
+		targetdir = location_dir .. "bin/%{cfg.buildcfg}"
 
-	defines { "_VARIADIC_MAX=10", "CELERO_STATIC", "_MBCS" }
-	if os.is("windows") then
-		defines{"WIN32", "_WINDOWS"}
-		links{"PowrProf.lib"}
-	end
-	includedirs{
-		_OPTIONS["celero-include"],
-		conan_includedirs
-	}
-	
-	libdirs{conan_libdirs}
+		files{
+			"src/**",
+		}
 
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		symbols "On"
-		links{conan_libs, _OPTIONS["celero-lib-d"]}
+		includedirs{
+			"src",
+		}
 
-	filter "configurations:Release"
-		defines { "NDEBUG" }
-		optimize "On"
-		links{conan_libs, _OPTIONS["celero-lib"]}
+		defines{"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"}
+
+		filter "configurations:Debug"
+			defines { "DEBUG" }
+			symbols "On"
+
+		filter "configurations:Release"
+			defines { "NDEBUG" }
+			optimize "On"
