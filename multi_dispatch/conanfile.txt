@@ -1,0 +1,5 @@
+[requires]
+Celero/master@enhex/stable
+
+[generators]
+premake
