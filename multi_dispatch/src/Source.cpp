@@ -353,6 +353,137 @@ namespace id_map_v
 	};
 }
 
+namespace id_single_map
+{
+	struct A;
+
+	struct B
+	{
+		enum type : uint_fast8_t {
+			B1,
+			B2,
+			count
+		};
+
+		type const id;
+	};
+
+	struct C
+	{
+		enum type : uint_fast8_t {
+			C1,
+			C2,
+			count
+		};
+
+		type const id;
+	};
+
+	struct A
+	{
+		enum type : uint_fast8_t {
+			A1,
+			A2,
+			count
+		};
+
+		type const id; // id per object instance. the extra memory is comparable to needing a pointer to a vtable
+
+		// for testing if the overhead of the id var + vtable is worse than virtual id()
+#ifdef ID_VAR_AND_VIRTUAL
+		A(A_type id) noexcept : id(id) {}
+		virtual void test(){};
+#endif
+	};
+
+	struct A1 : A
+	{
+		A1() : A{type::A1} {}
+		int x = 1;
+	};
+
+	struct A2 : A
+	{
+		A2() : A{type::A2} {}
+		int x = 2;
+	};
+
+
+	struct B1 : B
+	{
+		B1() : B{type::B1} {}
+	};
+
+	struct B2 : B
+	{
+		B2() : B{type::B2} {}
+	};
+
+	int f_B1_A1(B& b, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 1 + an.x;
+	}
+	int f_B1_A2(B& b, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 2 + an.x;
+	}
+	int f_B2_A1(B& b, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 3 + an.x;
+	}
+	int f_B2_A2(B& b, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 4 + an.x;
+	}
+
+	constexpr int(* f_B [4])(B& b, A& a) = {&f_B1_A1, &f_B1_A2, &f_B2_A1, &f_B2_A2};
+
+	int f(B& b, A& a) {
+		return f_B[b.id * A::count + a.id](b, a);
+	}
+
+	struct C1 : C
+	{
+		C1() : C{type::C1} {}
+	};
+
+	struct C2 : C
+	{
+		C2() : C{type::C2} {}
+	};
+
+	int f_C1_A1(C& c, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 1 + an.x;
+	}
+	int f_C1_A2(C& c, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 2 + an.x;
+	}
+	int f_C2_A1(C& c, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 3 + an.x;
+	}
+	int f_C2_A2(C& c, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 4 + an.x;
+	}
+
+	constexpr int(* f_C [4])(C& c, A& a) = {&f_C1_A1, &f_C1_A2, &f_C2_A1, &f_C2_A2};
+
+	int f(C& c, A& a) {
+		return f_C[c.id * A::count + a.id](c, a);
+	}
+}
+
 struct DD_Fixture : celero::TestFixture
 {
 	double_dispatch::A1 a1;
@@ -399,6 +530,22 @@ struct IMV_Fixture : celero::TestFixture
 	id_map_v::A* a;
 	id_map_v::B* b;
 	id_map_v::C* c;
+};
+
+struct ISM_Fixture : celero::TestFixture
+{
+	id_single_map::A1 a1;
+	id_single_map::A2 a2;
+
+	id_single_map::B1 b1;
+	id_single_map::B2 b2;
+
+	id_single_map::C1 c1;
+	id_single_map::C2 c2;
+
+	id_single_map::A* a;
+	id_single_map::B* b;
+	id_single_map::C* c;
 };
 
 
@@ -469,6 +616,30 @@ BENCHMARK_F(multi_dispatch, id_map_virtual, IMV_Fixture, g_samples, g_iterations
 
 	auto res1 = b->f(*a);
 	auto res2 = c->f(*a);
+	celero::DoNotOptimizeAway(res1);
+	celero::DoNotOptimizeAway(res2);
+}
+
+
+BENCHMARK_F(multi_dispatch, id_single_map, ISM_Fixture, g_samples, g_iterations)
+{
+	if (fastrand() % 2)
+		a = &a1;
+	else
+		a = &a2;
+
+	if (fastrand() % 2)
+		b = &b1;
+	else
+		b = &b2;
+
+	if (fastrand() % 2)
+		c = &c1;
+	else
+		c = &c2;
+
+	auto res1 = f(*b, *a);
+	auto res2 = f(*c, *a);
 	celero::DoNotOptimizeAway(res1);
 	celero::DoNotOptimizeAway(res2);
 }
