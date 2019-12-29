@@ -12,9 +12,9 @@
 #include <random>
 #include <sstream>
 #include <string>
-//#include <boost/spirit/home/x3.hpp>
-//#include <boost/spirit/home/x3/core.hpp>
-//#include <boost/spirit/home/x3/numeric.hpp>
+#include <boost/spirit/home/x3.hpp>
+#include <boost/spirit/home/x3/core.hpp>
+#include <boost/spirit/home/x3/numeric.hpp>
 //#include <formatxx/format.h>
 //#include <formatxx/string.h>
 
@@ -662,6 +662,22 @@ BENCHMARK_F(str_to_int, qi, IntFixture, g_samples, g_iterations)
 		;
 }
 
+BENCHMARK_F(str_to_int, x3, IntFixture, g_samples, g_iterations)
+{
+	namespace x3 = boost::spirit::x3;
+
+	int i;
+
+#ifdef DO_NOT_OPTIMIZE
+	celero::DoNotOptimizeAway(
+#endif
+		x3::phrase_parse(value_str.begin(), value_str.end(), x3::int_parser<int>(), x3::ascii::space, i)
+#ifdef DO_NOT_OPTIMIZE
+	)
+#endif
+		;
+}
+
 
 // string to float
 BASELINE_F(str_to_float, stof, FloatFixture, g_samples, g_iterations)
@@ -688,6 +704,22 @@ BENCHMARK_F(str_to_float, qi, FloatFixture, g_samples, g_iterations)
 	celero::DoNotOptimizeAway(
 #endif
 		qi::phrase_parse(value_str.begin(), value_str.end(), qi::auto_, boost::spirit::ascii::space, x)
+#ifdef DO_NOT_OPTIMIZE
+	)
+#endif
+		;
+}
+
+BENCHMARK_F(str_to_float, x3, FloatFixture, g_samples, g_iterations)
+{
+	namespace x3 = boost::spirit::x3;
+
+	float x;
+
+#ifdef DO_NOT_OPTIMIZE
+	celero::DoNotOptimizeAway(
+#endif
+		x3::phrase_parse(value_str.begin(), value_str.end(), x3::real_parser<float>(), x3::ascii::space, x)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
