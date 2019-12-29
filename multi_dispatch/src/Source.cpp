@@ -644,7 +644,7 @@ namespace id_double_map
 	}
 }
 
-// single array map which is accessed by combining the type IDs into a single index
+// single array map which is accessed by combining the type IDs into a single N-dimentional array index
 namespace id_single_map
 {
 	struct B
@@ -739,7 +739,7 @@ namespace id_single_map
 	{
 		constexpr auto row_size = Row::count;
 		return Column::id * row_size + Row::id;
-	};
+	}
 
 	constexpr auto f_B = []{
 		std::array<int(*)(B& b, A& a), B::count * A::count> map = {nullptr};
@@ -791,6 +791,180 @@ namespace id_single_map
 
 	int f(C& c, A& a) {
 		return f_C[c.id * A::count + a.id](c, a);
+	}
+}
+
+// single array map which is accessed by combining the type IDs into a single index using binary shift
+namespace id_single_map_shift
+{
+	using index_t = uint_fast8_t; // try to minimize the type
+	constexpr uint_fast8_t shift_bits = 4; // minimum number of bits needed to represent type ID
+
+	struct B
+	{
+		enum type : uint_fast8_t {
+			B1,
+			B2,
+			count
+		};
+
+		type const id;
+	};
+
+	struct C
+	{
+		enum type : uint_fast8_t {
+			C1,
+			C2,
+			count
+		};
+
+		type const id;
+	};
+
+	struct A
+	{
+		enum type : uint_fast8_t {
+			A1,
+			A2,
+			count
+		};
+
+		type const id; // id per object instance. the extra memory is comparable to needing a pointer to a vtable
+
+// for testing if the overhead of the id var + vtable is worse than virtual id()
+#ifdef ID_VAR_AND_VIRTUAL
+		A(A_type id) noexcept : id(id) {}
+		virtual void test(){};
+#endif
+	};
+
+	struct A1 : A
+	{
+		static constexpr auto id = type::A1;
+		A1() : A{id} {}
+		int x = 1;
+	};
+
+	struct A2 : A
+	{
+		static constexpr auto id = type::A2;
+		A2() : A{id} {}
+		int x = 2;
+	};
+
+
+	struct B1 : B
+	{
+		static constexpr auto id = type::B1;
+		B1() : B{id} {}
+	};
+
+	struct B2 : B
+	{
+		static constexpr auto id = type::B2;
+		B2() : B{id} {}
+	};
+
+	int f_B1_A1(B& b, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 1 + an.x;
+	}
+	int f_B1_A2(B& b, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 2 + an.x;
+	}
+	int f_B2_A1(B& b, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 3 + an.x;
+	}
+	int f_B2_A2(B& b, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 4 + an.x;
+	}
+
+	template<typename Column, typename Row>
+	constexpr auto index()
+	{
+		index_t res = Column::id;
+		res <<= shift_bits;
+		return res | Row::id;
+	}
+
+	template<typename Column, typename Row>
+	auto index(Column const& x, Row const& y) noexcept
+	{
+		index_t res = x.id;
+		res <<= shift_bits;
+		return res | y.id;
+	}
+
+	constexpr auto f_B = []{
+		std::array<int(*)(B& b, A& a), std::numeric_limits<index_t>::max()> map = {nullptr};
+		// this way if the ID of a type changes, it won't require manually reordering the map so the right function will be at the right array index
+		map[index<B1, A1>()] = &f_B1_A1;
+		map[index<B1, A2>()] = &f_B1_A2;
+		map[index<B2, A1>()] = &f_B2_A1;
+		map[index<B2, A2>()] = &f_B2_A2;
+
+		return map;
+	}();
+
+	int f(B& b, A& a) {
+		return f_B[index(b, a)](b, a);
+	}
+
+	struct C1 : C
+	{
+		static constexpr auto id = type::C1;
+		C1() : C{id} {}
+	};
+
+	struct C2 : C
+	{
+		static constexpr auto id = type::C2;
+		C2() : C{id} {}
+	};
+
+	int f_C1_A1(C& c, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 1 + an.x;
+	}
+	int f_C1_A2(C& c, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 2 + an.x;
+	}
+	int f_C2_A1(C& c, A& a)
+	{
+		auto& an = static_cast<A1&>(a);
+		return 3 + an.x;
+	}
+	int f_C2_A2(C& c, A& a)
+	{
+		auto& an = static_cast<A2&>(a);
+		return 4 + an.x;
+	}
+
+
+	constexpr auto f_C = []{
+		std::array<int(*)(C& b, A& a), std::numeric_limits<index_t>::max()> map = {nullptr};
+		// this way if the ID of a type changes, it won't require manually reordering the map so the right function will be at the right array index
+		map[index<C1, A1>()] = &f_C1_A1;
+		map[index<C1, A2>()] = &f_C1_A2;
+		map[index<C2, A1>()] = &f_C2_A1;
+		map[index<C2, A2>()] = &f_C2_A2;
+
+		return map;
+	}();
+
+	int f(C& c, A& a) {
+		return f_C[index(c, a)](c, a);
 	}
 }
 
@@ -888,6 +1062,22 @@ struct ISM_Fixture : celero::TestFixture
 	id_single_map::A* a;
 	id_single_map::B* b;
 	id_single_map::C* c;
+};
+
+struct ISMS_Fixture : celero::TestFixture
+{
+	id_single_map_shift::A1 a1;
+	id_single_map_shift::A2 a2;
+
+	id_single_map_shift::B1 b1;
+	id_single_map_shift::B2 b2;
+
+	id_single_map_shift::C1 c1;
+	id_single_map_shift::C2 c2;
+
+	id_single_map_shift::A* a;
+	id_single_map_shift::B* b;
+	id_single_map_shift::C* c;
 };
 
 
@@ -1012,6 +1202,30 @@ BENCHMARK_F(multi_dispatch, id_double_map, IDM_Fixture, g_samples, g_iterations)
 
 
 BENCHMARK_F(multi_dispatch, id_single_map, ISM_Fixture, g_samples, g_iterations)
+{
+	if (fastrand() % 2)
+		a = &a1;
+	else
+		a = &a2;
+
+	if (fastrand() % 2)
+		b = &b1;
+	else
+		b = &b2;
+
+	if (fastrand() % 2)
+		c = &c1;
+	else
+		c = &c2;
+
+	auto res1 = f(*b, *a);
+	auto res2 = f(*c, *a);
+	celero::DoNotOptimizeAway(res1);
+	celero::DoNotOptimizeAway(res2);
+}
+
+
+BENCHMARK_F(multi_dispatch, id_s_map_shift, ISMS_Fixture, g_samples, g_iterations)
 {
 	if (fastrand() % 2)
 		a = &a1;
