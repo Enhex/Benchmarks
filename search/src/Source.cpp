@@ -19,7 +19,7 @@ constexpr int g_samples = 2;
 constexpr int g_iterations = 50;
 
 std::mt19937 rng;
-auto random = std::bind(std::uniform_int_distribution<int>(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()), rng);
+auto rand_int = std::bind(std::uniform_int_distribution<int>(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()), rng);
 
 
 class baseFixture : public celero::TestFixture
@@ -53,7 +53,7 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			auto element = random();
+			auto element = rand_int();
 			set.emplace(element);
 			find_elements.emplace_back(element);
 		}
@@ -76,7 +76,7 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			auto element = random();
+			auto element = rand_int();
 			set.emplace(element);
 			find_elements.emplace_back(element);
 		}
@@ -100,7 +100,7 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			auto element = random();
+			auto element = rand_int();
 			set.emplace(element);
 			find_elements.emplace_back(element);
 		}
@@ -139,7 +139,7 @@ public:
 
 		for (decltype(experimentValue) i = 0; i < experimentValue; ++i)
 		{
-			vec.emplace_back(random());
+			vec.emplace_back(rand_int());
 			find_elements.emplace_back(vec.back());
 		}
 
