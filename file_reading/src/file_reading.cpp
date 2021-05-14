@@ -1,17 +1,19 @@
 #include <celero/Celero.h>
-#include <fstream>
-#include <boost/iostreams/stream.hpp>
-#include <boost/iostreams/device/mapped_file.hpp>
-#include <boost/iostreams/device/file.hpp>
-#include <iostream>
+
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
 #include <mmaplib.h>
 
 CELERO_MAIN
 
 constexpr int g_samples = 30;
-constexpr int g_iterations = 100;
+constexpr int g_iterations = 200;
 
 namespace io = boost::iostreams;
 
@@ -39,7 +41,8 @@ BASELINE(group, fstream, g_samples, g_iterations)
 
 BENCHMARK(group, fread, g_samples, g_iterations)
 {
-	FILE * pFile = fopen("test.txt", "rb");
+	FILE * pFile = fopen("./test.txt", "rb");
+	assert(pFile != NULL);
 
 	// obtain file size:
 	fseek(pFile, 0, SEEK_END);
@@ -85,20 +88,20 @@ BENCHMARK(group, fstream_buffer, g_samples, g_iterations)
 	delete[] buffer;
 }
 
+// doesn't work anymore
+// BENCHMARK(group, boost_mapped_file, g_samples, g_iterations)
+// {
+// 	boost::iostreams::mapped_file_source file("./test.txt");
 
-BENCHMARK(group, boost_mapped_file, g_samples, g_iterations)
-{
-	boost::iostreams::mapped_file_source file("test.txt");
+// 	//std::cout << file.data();
 
-	//std::cout << file.data();
-
-	file.close();
-}
+// 	file.close();
+// }
 
 
 BENCHMARK(group, mmaplib, g_samples, g_iterations)
 {
-	mmaplib::MemoryMappedFile file("test.txt");
+	mmaplib::MemoryMappedFile file("./test.txt");
 
 	//std::cout << file.data();
 }
