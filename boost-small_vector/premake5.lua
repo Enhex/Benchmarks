@@ -12,7 +12,7 @@ location_dir = _OPTIONS["location"]
 
 include(location_dir .. "conanbuildinfo.premake.lua")
 
-project_name = "boost small_vector"
+project_name = "boost-small_vector"
 
 workspace(project_name)
 	location(location_dir)
