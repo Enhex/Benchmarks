@@ -20,7 +20,7 @@ constexpr int g_iterations = 2000;
 
 
 std::mt19937 rng;
-auto random = std::bind(std::uniform_int_distribution<int>(0, 10), rng); // using ints and limited range to get duplicates
+auto random_int = std::bind(std::uniform_int_distribution<int>(0, 10), rng); // using ints and limited range to get duplicates
 
 size_t g_num_elements = 1000;
 std::vector<int> g_int_elements;
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	// Create elements
 	g_int_elements.reserve(g_num_elements);
 	for (size_t i = 0; i < g_num_elements; ++i)
-		g_int_elements.emplace_back(random());
+		g_int_elements.emplace_back(random_int());
 
 	// Run
 	celero::Run(argc, argv);

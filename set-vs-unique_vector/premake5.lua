@@ -12,7 +12,7 @@ location_dir = _OPTIONS["location"]
 
 include(location_dir .. "conanbuildinfo.premake.lua")
 
-project_name = "set_vs_unique_vector"
+project_name = "set-vs-unique_vector"
 
 workspace(project_name)
 	location(location_dir)
