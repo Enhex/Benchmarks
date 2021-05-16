@@ -1,10 +1,9 @@
 #include <celero/Celero.h>
 
-#include <boost\pool\pool_alloc.hpp>
+#include <boost/pool/pool_alloc.hpp>
+#include <list>
 #include <set>
 #include <unordered_set>
-#include <list>
-
 
 ///
 /// This is the main(int argc, char** argv) for the entire celero program.
