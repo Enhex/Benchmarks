@@ -15,7 +15,7 @@ constexpr int g_samples = 200;
 constexpr int g_iterations = 1000000;
 
 std::mt19937 rng;
-auto random = std::bind(std::uniform_int_distribution<int>(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()), rng);
+auto random_int = std::bind(std::uniform_int_distribution<int>(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()), rng);
 constexpr size_t g_num_elements = 100;
 std::vector<int> g_elements;
 
@@ -25,7 +25,7 @@ std::vector<int> g_elements;
 //	// Create elements
 //	g_elements.reserve(g_num_elements);
 //	for (size_t i = 0; i < g_num_elements; ++i)
-//		g_elements.emplace_back(random());
+//		g_elements.emplace_back(random_int());
 //
 //	// Run
 //	celero::Run(argc, argv);
@@ -39,8 +39,8 @@ public:
 
 	virtual void setUp(int64_t experimentValue)
 	{
-		a = random();
-		b = random();
+		a = random_int();
+		b = random_int();
 	}
 };
 
