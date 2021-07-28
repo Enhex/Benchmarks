@@ -1,0 +1,6 @@
+[requires]
+Celero/master@enhex/stable
+stb/20200203
+
+[generators]
+premake
