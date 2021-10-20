@@ -12,7 +12,7 @@ location_dir = _OPTIONS["location"]
 
 include(location_dir .. "conanbuildinfo.premake.lua")
 
-project_name = "linear_math_lib"
+project_name = "linear-algebra-libs"
 
 workspace(project_name)
 	location(location_dir)

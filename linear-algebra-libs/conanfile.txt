@@ -1,7 +1,7 @@
 [requires]
 Celero/master@enhex/stable
-eigen/3.3.7@conan/stable
-glm/0.9.9.4@g-truc/stable
+eigen/3.4.0
+glm/0.9.9.8
 
 [generators]
 premake
