@@ -36,7 +36,8 @@ constexpr int g_samples = 1000;
 constexpr int g_iterations = 1000;
 #endif
 
-std::mt19937 rng;
+std::random_device rd;
+std::mt19937 rng(rd());
 auto distribution_int = std::uniform_int_distribution<>(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 auto random_int = [] {
 	return distribution_int(rng);
