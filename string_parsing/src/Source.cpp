@@ -346,6 +346,24 @@ BENCHMARK_F(int_to_str, fmt_format, IntFixture, g_samples, g_iterations)
 #endif
 }
 
+BENCHMARK_F(int_to_str, fmt_to_string, IntFixture, g_samples, g_iterations)
+{
+	std::string s;
+
+#ifdef DO_NOT_OPTIMIZE
+	celero::DoNotOptimizeAway(
+#endif
+		s = fmt::to_string(value)
+#ifdef DO_NOT_OPTIMIZE
+	)
+#endif
+		;
+
+#ifdef INSPECT_OUTPUT
+	std::cout << s << std::endl;
+#endif
+}
+
 BENCHMARK_F(int_to_str, fmt_buffer, IntFixture, g_samples, g_iterations)
 {
 	std::string s;
@@ -580,6 +598,24 @@ BENCHMARK_F(float_to_str, fmt_format, FloatFixture, g_samples, g_iterations)
 	celero::DoNotOptimizeAway(
 #endif
 		s = fmt::format("{}", value)
+#ifdef DO_NOT_OPTIMIZE
+	)
+#endif
+		;
+
+#ifdef INSPECT_OUTPUT
+	std::cout << s << std::endl;	// no redundant trail
+#endif
+}
+
+BENCHMARK_F(float_to_str, fmt_to_string, FloatFixture, g_samples, g_iterations)
+{
+	std::string s;
+
+#ifdef DO_NOT_OPTIMIZE
+	celero::DoNotOptimizeAway(
+#endif
+		s = fmt::to_string(value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif

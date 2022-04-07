@@ -1,7 +1,7 @@
 [requires]
 Celero/master@enhex/stable
-boost/1.71.0@conan/stable
-fmt/5.3.0@bincrafters/stable
+boost/1.78.0
+fmt/8.1.1
 
 [generators]
 premake
