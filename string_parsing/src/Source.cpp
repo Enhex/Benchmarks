@@ -372,12 +372,12 @@ BENCHMARK_F(int_to_str, fmt_buffer, IntFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(buf, "{}", value);
-	s = buf.data();
+	format_to(buf, "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
 		;
+	s = buf.data();
 
 #ifdef INSPECT_OUTPUT
 	std::cout << s << std::endl;
@@ -392,12 +392,12 @@ BENCHMARK_F(int_to_str, fmt_buffer_g, IntFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(g_buf, "{}", value);
-	s = g_buf.data();
+	format_to(g_buf, "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
 		;
+	s = g_buf.data();
 
 #ifdef INSPECT_OUTPUT
 	std::cout << s << std::endl;
@@ -634,12 +634,12 @@ BENCHMARK_F(float_to_str, fmt_buffer, FloatFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(buf, "{}", value);
-	s = buf.data();
+	format_to(buf, "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
 		;
+	s = buf.data();
 
 #ifdef INSPECT_OUTPUT
 	std::cout << s << std::endl;	// no redundant trail
@@ -654,12 +654,12 @@ BENCHMARK_F(float_to_str, fmt_buffer_g, FloatFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(g_buf, "{}", value);
-	s = g_buf.data();
+	format_to(g_buf, "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
 		;
+	s = g_buf.data();
 
 #ifdef INSPECT_OUTPUT
 	std::cout << s << std::endl;
