@@ -166,7 +166,7 @@ struct IntFixture : celero::TestFixture
 {
 	int value;
 	std::string value_str;
-	
+
 	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		value = random_int();
