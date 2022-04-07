@@ -253,3 +253,4 @@ paket-files/
 *.sln.iml
 Celero Template/
 /__pycache__/build_base.cpython-39.pyc
+/__pycache__/
