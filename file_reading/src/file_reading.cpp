@@ -17,7 +17,7 @@ constexpr int g_iterations = 200;
 
 namespace io = boost::iostreams;
 
-BASELINE(group, fstream, g_samples, g_iterations)
+BASELINE(read, fstream, g_samples, g_iterations)
 {
 	std::ifstream is("test.txt", std::ifstream::binary);
 
@@ -39,7 +39,7 @@ BASELINE(group, fstream, g_samples, g_iterations)
 }
 
 
-BENCHMARK(group, fread, g_samples, g_iterations)
+BENCHMARK(read, fread, g_samples, g_iterations)
 {
 	FILE * pFile = fopen("./test.txt", "rb");
 	assert(pFile != NULL);
@@ -65,7 +65,7 @@ BENCHMARK(group, fread, g_samples, g_iterations)
 }
 
 
-BENCHMARK(group, fstream_buffer, g_samples, g_iterations)
+BENCHMARK(read, fstream_buffer, g_samples, g_iterations)
 {
 	std::ifstream is("test.txt", std::ifstream::binary);
 
@@ -99,7 +99,7 @@ BENCHMARK(group, fstream_buffer, g_samples, g_iterations)
 // }
 
 
-BENCHMARK(group, mmaplib, g_samples, g_iterations)
+BENCHMARK(read, mmaplib, g_samples, g_iterations)
 {
 	mmaplib::MemoryMappedFile file("./test.txt");
 
@@ -138,3 +138,104 @@ BENCHMARK(group, mmaplib, g_samples, g_iterations)
 //	mapped_region region(m_file, read_write, 0, length);
 //	region.flush();
 //}
+
+
+
+
+BASELINE(sum, fstream, g_samples, g_iterations)
+{
+	std::ifstream is("test.txt", std::ifstream::binary);
+
+	// get length of file:
+	is.seekg(0, is.end);
+	int length = is.tellg();
+	is.seekg(0, is.beg);
+
+	char * buffer = new char[length+1];
+	buffer[length] = 0;
+
+	// read data as a block:
+	is.read(buffer, length);
+
+	int sum = 0;
+	for(int i=0; i < length+1; ++i) {
+		sum += buffer[i];
+	}
+	celero::DoNotOptimizeAway(sum);
+
+	// ...buffer contains the entire file...
+	is.close();
+	delete[] buffer;
+}
+
+
+BENCHMARK(sum, fread, g_samples, g_iterations)
+{
+	FILE * pFile = fopen("./test.txt", "rb");
+	assert(pFile != NULL);
+
+	// obtain file size:
+	fseek(pFile, 0, SEEK_END);
+	long length = ftell(pFile);
+	rewind(pFile);
+
+	// allocate memory to contain the whole file:
+	auto buffer = new char[length + 1];
+	buffer[length] = 0;
+
+	// copy the file into the buffer:
+	auto result = fread(buffer, 1, length, pFile);
+
+	int sum = 0;
+	for(int i=0; i < length+1; ++i) {
+		sum += buffer[i];
+	}
+	celero::DoNotOptimizeAway(sum);
+
+	// terminate
+	fclose(pFile);
+	free(buffer);
+}
+
+
+BENCHMARK(sum, fstream_buffer, g_samples, g_iterations)
+{
+	std::ifstream is("test.txt", std::ifstream::binary);
+
+	// get length of file:
+	is.seekg(0, is.end);
+	int length = is.tellg();
+	is.seekg(0, is.beg);
+
+	auto buffer = new char[length + 1];
+	buffer[length] = 0;
+
+	is.rdbuf()->pubsetbuf(buffer, length);
+
+	// read data as a block:
+	is.read(buffer, length);
+
+	int sum = 0;
+	for(int i=0; i < length+1; ++i) {
+		sum += buffer[i];
+	}
+	celero::DoNotOptimizeAway(sum);
+
+	// ...buffer contains the entire file...
+	is.close();
+	delete[] buffer;
+}
+
+
+BENCHMARK(sum, mmaplib, g_samples, g_iterations)
+{
+	mmaplib::MemoryMappedFile file("./test.txt");
+
+	auto* buffer = file.data();
+	auto const size = file.size();
+	int sum = 0;
+	for(int i=0; i < size; ++i) {
+		sum += buffer[i];
+	}
+	celero::DoNotOptimizeAway(sum);
+}
