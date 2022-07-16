@@ -53,7 +53,7 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			auto element = rand_int();
+			auto const element = rand_int();
 			set.emplace(element);
 			find_elements.emplace_back(element);
 		}
@@ -76,7 +76,7 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			auto element = rand_int();
+			auto const element = rand_int();
 			set.emplace(element);
 			find_elements.emplace_back(element);
 		}
@@ -100,7 +100,7 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			auto element = rand_int();
+			auto const element = rand_int();
 			set.emplace(element);
 			find_elements.emplace_back(element);
 		}
@@ -130,17 +130,18 @@ class vectorFixture : public baseFixture
 public:
 	std::vector<int> vec;
 
-	virtual void setUp(int64_t experimentValue)
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
 	{
 		rng.seed(0);
 
-		vec.reserve((size_t)experimentValue);	// vector is memory contiguous, so no performance change
-		find_elements.reserve((size_t)experimentValue);
+		vec.reserve((size_t)experimentValue.Value); // vector is memory contiguous, so no performance change
+		find_elements.reserve((size_t)experimentValue.Value);
 
-		for (decltype(experimentValue) i = 0; i < experimentValue; ++i)
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			vec.emplace_back(rand_int());
-			find_elements.emplace_back(vec.back());
+			auto const element = rand_int();
+			vec.emplace_back(element);
+			find_elements.emplace_back(element);
 		}
 
 		std::shuffle(find_elements.begin(), find_elements.end(), rng);
