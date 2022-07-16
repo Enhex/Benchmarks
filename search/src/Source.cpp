@@ -176,39 +176,49 @@ public:
 
 BASELINE_F(Search, unordered_set, unordered_setFixture, g_samples, g_iterations)
 {
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = set.find(e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
 
 
 BENCHMARK_F(Search, unordered_set_reservred, unordered_setReservedFixture, g_samples, g_iterations)
 {
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = set.find(e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
 
 
 // Using limited fixture because it takes too long
 BENCHMARK_F(Search, set_find, setLimitedFixture, g_samples, g_iterations)
 {
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = set.find(e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
 
 
 // Using limited fixture because it takes too long
 BENCHMARK_F(Search, set_lower_bound, setLimitedFixture, g_samples, g_iterations)
 {
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = set.lower_bound(e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
 
 
 // Using limited fixture because it takes too long
 BENCHMARK_F(Search, vector_find, vectorLimitedFixture, g_samples, g_iterations)
 {
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = std::find(vec.begin(), vec.end(), e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
 
 
@@ -216,13 +226,17 @@ BENCHMARK_F(Search, vector_lower_bound, vectorFixture, g_samples, g_iterations)
 {
 	std::sort(vec.begin(), vec.end());
 
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = std::lower_bound(vec.begin(), vec.end(), e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
 
 
 BENCHMARK_F(Search, vector_lower_bound_presorted, vectorPresortedFixture, g_samples, g_iterations)
 {
-	for (auto& e : find_elements)
+	for (auto& e : find_elements) {
 		auto result = std::lower_bound(vec.begin(), vec.end(), e);
+		celero::DoNotOptimizeAway(result);
+	}
 }
