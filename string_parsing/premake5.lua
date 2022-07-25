@@ -41,3 +41,4 @@ workspace(project_name)
 		filter "configurations:Release"
 			defines { "NDEBUG" }
 			optimize "On"
+			flags{"LinkTimeOptimization"}

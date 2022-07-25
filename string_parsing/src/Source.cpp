@@ -373,7 +373,7 @@ BENCHMARK_F(int_to_str, fmt_buffer, IntFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(buf, "{}", value)
+	format_to(std::back_inserter(buf), "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
@@ -393,7 +393,7 @@ BENCHMARK_F(int_to_str, fmt_buffer_g, IntFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(g_buf, "{}", value)
+	format_to(std::back_inserter(g_buf), "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
@@ -635,7 +635,7 @@ BENCHMARK_F(float_to_str, fmt_buffer, FloatFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(buf, "{}", value)
+	format_to(std::back_inserter(buf), "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
@@ -655,7 +655,7 @@ BENCHMARK_F(float_to_str, fmt_buffer_g, FloatFixture, g_samples, g_iterations)
 #ifdef DO_NOT_OPTIMIZE
 	celero::DoNotOptimizeAway(
 #endif
-	format_to(g_buf, "{}", value)
+	format_to(std::back_inserter(g_buf), "{}", value)
 #ifdef DO_NOT_OPTIMIZE
 	)
 #endif
