@@ -5,16 +5,16 @@ import csv
 
 # plot
 with open('./result.csv') as csvfile:
-    line_chart = pygal.Line(style=DarkStyle)
+    line_chart = pygal.Bar(style=DarkStyle)
     line_chart.title = 'Relative runtime (lower is faster), compiler optimizations off'
-    line_chart.x_labels = ['int8', 'int16', 'int32', 'int64', '10 bytes', '100 bytes', '1000 bytes']
+    line_chart.x_labels = ['int8', 'int16', 'int32', 'int64', '10 bytes', '100 bytes']
 
     experiments = {}
 
     reader = csv.DictReader(csvfile)
     for row in reader:
         experiment_name = row['Experiment']
-        if row['Group'] == 'array_1' or row['Group'] == 'array_10000':
+        if row['Group'] == 'array_1' or row['Group'] == 'array_1000' or row['Group'] == 'array_10000':
             continue
         if experiment_name == 'ref':
             experiment_name = 'reference'
