@@ -23,6 +23,31 @@ auto random_float = [] {
 };
 
 
+BASELINE(str_var, cout, g_samples, g_iterations)
+{
+	std::string x = "some string literal";
+	std::cout << x;
+}
+
+BENCHMARK(str_var, printf, g_samples, g_iterations)
+{
+	std::string x = "some string literal";
+	std::printf("%s", x.c_str());
+}
+
+BENCHMARK(str_var, fwrite, g_samples, g_iterations)
+{
+	std::string x = "some string literal";
+	std::fwrite(x.data(), 1, x.size(), stdout);
+}
+
+BENCHMARK(str_var, fmt, g_samples, g_iterations)
+{
+	std::string x = "some string literal";
+	fmt::print(x);
+}
+
+
 BASELINE(str_lit, cout, g_samples, g_iterations)
 {
 	std::cout << "some string literal";
