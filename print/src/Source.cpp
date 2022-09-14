@@ -3,6 +3,9 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#ifdef linux
+#include <unistd.h>
+#endif
 
 CELERO_MAIN
 
@@ -40,6 +43,14 @@ BENCHMARK(str_var, fwrite, g_samples, g_iterations)
 	std::string x = "some string literal";
 	std::fwrite(x.data(), 1, x.size(), stdout);
 }
+
+#ifdef __linux__
+BENCHMARK(str_var, write, g_samples, g_iterations)
+{
+	std::string x = "some string literal";
+	write(1, x.data(), x.size());
+}
+#endif
 
 BENCHMARK(str_var, fmt, g_samples, g_iterations)
 {
