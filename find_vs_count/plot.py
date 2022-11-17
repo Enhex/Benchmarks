@@ -7,7 +7,7 @@ with open('./result.csv') as csvfile:
     line_chart = pygal.Line(logarithmic=True)
     line_chart.title = 'count time / find time'
     line_chart.x_labels = []
-    for i in range(1,21):
+    for i in range(1,16):
         line_chart.x_labels += [str(pow(2,i))]
 
     experiments = {}
