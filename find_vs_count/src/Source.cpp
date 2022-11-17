@@ -13,7 +13,7 @@
 CELERO_MAIN
 
 constexpr int g_samples = 1000;
-constexpr int g_iterations = 75000;
+constexpr int g_iterations = 65000;
 
 
 std::mt19937 rng;
@@ -28,7 +28,7 @@ public:
 	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
 		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
-		const int totalNumberOfTests = 16;
+		const int totalNumberOfTests = 15;
 
 		for (int i = 1; i <= totalNumberOfTests; ++i)
 			problemSpace.emplace_back(int64_t(pow(2, i)));
@@ -51,13 +51,53 @@ public:
 
 		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
 		{
-			map.emplace(rand_int(), rand_int());
+			map.emplace(i, i*2);
 		}
 	}
 };
 
 
 class mapFixture : public baseFixture
+{
+public:
+	std::map<int, int> map;
+	int key;
+
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
+	{
+		rng.seed(seed);
+		auto rand_int = std::bind(std::uniform_int_distribution<int>(0, experimentValue.Value), rng);
+
+		key = rand_int();
+
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
+		{
+			map.emplace(i, i*2);
+		}
+	}
+};
+
+class rand_unordered_mapFixture : public baseFixture
+{
+public:
+	std::unordered_map<int,int> map;
+
+	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
+	{
+		rng.seed(seed);
+		auto rand_int = std::bind(std::uniform_int_distribution<int>(0, experimentValue.Value), rng);
+
+		key = rand_int();
+
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
+		{
+			map.emplace(rand_int(), rand_int());
+		}
+	}
+};
+
+
+class rand_mapFixture : public baseFixture
 {
 public:
 	std::map<int, int> map;
@@ -106,6 +146,43 @@ BASELINE_F(map, find, mapFixture, g_samples, g_iterations)
 }
 
 BENCHMARK_F(map, count, mapFixture, g_samples, g_iterations)
+{
+	if(map.count(key) > 0) {
+		auto result = map.at(key);
+		celero::DoNotOptimizeAway(result);
+	}
+}
+
+
+// random
+BASELINE_F(rand_unordered_map, find, rand_unordered_mapFixture, g_samples, g_iterations)
+{
+	auto iter = map.find(key);
+	if(iter != map.end()) {
+		auto result = iter->second;
+		celero::DoNotOptimizeAway(result);
+	}
+}
+
+BENCHMARK_F(rand_unordered_map, count, rand_unordered_mapFixture, g_samples, g_iterations)
+{
+	if(map.count(key) > 0) {
+		auto result = map.at(key);
+		celero::DoNotOptimizeAway(result);
+	}
+}
+
+
+BASELINE_F(rand_map, find, rand_mapFixture, g_samples, g_iterations)
+{
+	auto iter = map.find(key);
+	if(iter != map.end()) {
+		auto result = iter->second;
+		celero::DoNotOptimizeAway(result);
+	}
+}
+
+BENCHMARK_F(rand_map, count, rand_mapFixture, g_samples, g_iterations)
 {
 	if(map.count(key) > 0) {
 		auto result = map.at(key);
