@@ -1,7 +1,7 @@
 import os
 from sys import platform
 
-def build(source, build_type='Release'):
+def build(source, build_type='Release', use_clang=False):
     project_name = os.path.basename(os.path.dirname(source + "/")) # adding "/" so it will recognize the last dir as dir
     build_dir = "build/" + project_name
     os.chdir(source)
@@ -16,8 +16,12 @@ def build(source, build_type='Release'):
 
     os.chdir(source)
 
+    premake_compiler = ''
+    if use_clang:
+        premake_compiler = ' --cc=clang '
+
     def premake_generate(generator):
-        os.system('premake5 ' + generator + ' --location="../../' + build_dir + '/"')
+        os.system('premake5 ' + generator + premake_compiler + ' --location="../../' + build_dir + '/"')
 
     if platform == 'win32':
         premake_generate('vs2019')
