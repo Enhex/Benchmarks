@@ -22,9 +22,8 @@ std::mt19937 rng;
 auto rand_int = std::bind(std::uniform_int_distribution<int>(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()), rng);
 
 
-class baseFixture : public celero::TestFixture
+struct baseFixture : celero::TestFixture
 {
-public:
 	std::vector<int> find_elements;
 
 	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
@@ -40,9 +39,8 @@ public:
 };
 
 
-class unordered_setFixture : public baseFixture
+struct unordered_setFixture : baseFixture
 {
-public:
 	std::unordered_set<int> set;
 
 	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
@@ -62,9 +60,8 @@ public:
 	}
 };
 
-class unordered_setReservedFixture : public baseFixture
+struct unordered_setReservedFixture : baseFixture
 {
-public:
 	std::unordered_set<int> set;
 
 	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
@@ -86,9 +83,8 @@ public:
 };
 
 
-class setFixture : public baseFixture
+struct setFixture : baseFixture
 {
-public:
 	std::set<int> set;
 
 	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
@@ -109,9 +105,8 @@ public:
 	}
 };
 
-class setLimitedFixture : public setFixture
+struct setLimitedFixture : setFixture
 {
-public:
 	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
 		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
@@ -125,9 +120,8 @@ public:
 };
 
 
-class vectorFixture : public baseFixture
+struct vectorFixture : baseFixture
 {
-public:
 	std::vector<int> vec;
 
 	void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override
@@ -148,9 +142,8 @@ public:
 	}
 };
 
-class vectorPresortedFixture : public vectorFixture
+struct vectorPresortedFixture : vectorFixture
 {
-public:
 	virtual void setUp(int64_t experimentValue)
 	{
 		vectorFixture::setUp(experimentValue);
@@ -158,9 +151,8 @@ public:
 	}
 };
 
-class vectorLimitedFixture : public vectorFixture
+struct vectorLimitedFixture : vectorFixture
 {
-public:
 	virtual std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
 	{
 		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
