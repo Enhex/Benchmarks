@@ -1,0 +1,77 @@
+-03 100 elements
+bound_check        173 ns          173 ns     24283719
+no_check          4.67 ns         4.67 ns    900354296
+37.04496788 times faster
+
+-03 -march=native 100 elements
+bound_check        185 ns          185 ns     22722967
+no_check          9.28 ns         9.28 ns    453062406
+19.935344828 times faster
+
+256 bit SIMD is slower than 128? maybe because 100 doesn't divide by 8, 200 does.
+
+-03 200 elements
+bound_check        347 ns          347 ns     12139857
+no_check          6.36 ns         6.36 ns    661069635
+54.559748428 times faster
+
+-03 -march=native 200 elements
+bound_check        367 ns          367 ns     11449032
+no_check          8.93 ns         8.93 ns    470553244
+41.097424412 times faster
+
+still slower.
+
+-03 -march=native 1000 elements
+bound_check       1785 ns         1784 ns      2356314
+no_check          17.0 ns         17.0 ns    246369219
+105 times faster
+
+-03 -march=native 4000 elements
+bound_check       7395 ns         7392 ns       568321
+no_check          64.9 ns         64.9 ns     64888995
+113.944530046 times faster
+
+-03 -march=native 4096 elements
+bound_check       7534 ns         7531 ns       559014
+no_check          65.2 ns         65.2 ns     64507118
+115.552147239 times faster
+
+adding 1 more 256 bits SIMD vector, 8 elements, significantly slows down the no_check result.
+maybe it's a cache thing?
+4096:
+       869,757,398      stalled-cycles-frontend:u        #   12.86% frontend cycles idle
+        12,130,336      stalled-cycles-backend:u         #    0.18% backend cycles idle
+    14,382,990,756      instructions:u                   #    2.13  insn per cycle
+
+4104:
+       875,962,156      stalled-cycles-frontend:u        #   12.47% frontend cycles idle
+     2,073,640,619      stalled-cycles-backend:u         #   29.51% backend cycles idle
+    11,505,487,887      instructions:u                   #    1.64  insn per cycle
+
+backend stalling seems to be related to waiting for memory, so it's likely cache misses.
+
+stalled-cycles-backend is also high (~27% with -march=native) for low elements count, such as 200.
+maybe it's because the data still isn't in cache and the hardware prefetcher didn't
+recongnize a pattern yet.
+perhaps it's also with 128 bit SIMD is faster than 256 bit at low element counts as the
+prefetcher gets twice as many observations and there're less cache misses?
+    - software prefetching can settle this
+
+-03 4096 elements
+bound_check       7181 ns         7176 ns       585910
+no_check           128 ns          128 ns     32821052
+56.1015625 times faster
+
+65.2 ns is about 2 times faster than 128 ns, which fits having 2 times more SIMD lanes.
+
+
+hardware prefetcher disabled:
+-03 4096 elements
+bound_check       6935 ns         6932 ns       610766
+no_check           125 ns          125 ns     33682844
+-03 -march=native 4096 elements
+bound_check       7341 ns         7338 ns       573829
+no_check          64.7 ns         64.7 ns     64932737
+
+not caused by the hardware prefetcher.

@@ -1,0 +1,5 @@
+[requires]
+benchmark/1.7.1
+
+[generators]
+premake
