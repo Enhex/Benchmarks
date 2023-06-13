@@ -1,7 +1,7 @@
 [requires]
 Celero/master@enhex/stable
-boost/1.79.0
-fmt/9.0.0
+boost/1.82.0
+fmt/10.0.0
 
 [generators]
 premake

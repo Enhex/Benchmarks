@@ -1,6 +1,6 @@
 [requires]
 Celero/master@enhex/stable
-boost/1.76.0
+boost/1.82.0
 cpuinfo/master@enhex/stable
 
 [generators]
