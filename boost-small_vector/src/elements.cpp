@@ -123,6 +123,31 @@ BENCHMARK_F(const_16, small_vector, Fixture, g_samples, g_iterations)
 }
 
 
+BASELINE_F(const_100, vector, Fixture, g_samples, g_iterations)
+{
+	std::vector<int> v;
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(const_100, vector_reserve, Fixture, g_samples, g_iterations)
+{
+	std::vector<int> v;
+	v.reserve(100);
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(const_100, small_vector, Fixture, g_samples, g_iterations)
+{
+	small_vector<int, 100> v;
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
 BASELINE_F(const_200, vector, Fixture, g_samples, g_iterations)
 {
 	std::vector<int> v;
