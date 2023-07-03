@@ -63,3 +63,86 @@ BENCHMARK_F(size_10, small_vector, Fixture, g_samples, g_iterations)
 	for (unsigned i = 0; i < count; ++i)
 		v.emplace_back(i);
 }
+
+
+BASELINE_F(size_2, vector, Fixture, g_samples, g_iterations)
+{
+
+	constexpr unsigned size = 2;
+	const unsigned count = size * factor;
+	std::vector<int> v;
+	for (unsigned i = 0; i < count; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(size_2, vector_reserve, Fixture, g_samples, g_iterations)
+{
+
+	constexpr unsigned size = 2;
+	const unsigned count = size * factor;
+	std::vector<int> v;
+	v.reserve(size);
+	for (unsigned i = 0; i < count; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(size_2, small_vector, Fixture, g_samples, g_iterations)
+{
+	constexpr unsigned size = 2;
+	const unsigned count = size * factor;
+	small_vector<int, size> v;
+	for (unsigned i = 0; i < count; ++i)
+		v.emplace_back(i);
+}
+
+
+BASELINE_F(const_16, vector, Fixture, g_samples, g_iterations)
+{
+	std::vector<int> v;
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(const_16, vector_reserve, Fixture, g_samples, g_iterations)
+{
+	std::vector<int> v;
+	v.reserve(16);
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(const_16, small_vector, Fixture, g_samples, g_iterations)
+{
+	small_vector<int, 16> v;
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BASELINE_F(const_200, vector, Fixture, g_samples, g_iterations)
+{
+	std::vector<int> v;
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(const_200, vector_reserve, Fixture, g_samples, g_iterations)
+{
+	std::vector<int> v;
+	v.reserve(200);
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}
+
+
+BENCHMARK_F(const_200, small_vector, Fixture, g_samples, g_iterations)
+{
+	small_vector<int, 200> v;
+	for (unsigned i = 0; i < factor; ++i)
+		v.emplace_back(i);
+}

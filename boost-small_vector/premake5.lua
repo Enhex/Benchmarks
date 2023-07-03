@@ -65,4 +65,4 @@ workspace(project_name)
 
 		filter "configurations:Release"
 			defines { "NDEBUG" }
-			optimize "On"
+			optimize "Off"
