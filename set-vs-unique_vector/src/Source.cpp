@@ -19,7 +19,8 @@ constexpr int g_samples = 10;
 constexpr int g_iterations = 2000;
 
 
-std::mt19937 rng;
+std::random_device rd;
+std::mt19937 rng(rd());
 auto random_int = std::bind(std::uniform_int_distribution<int>(0, 10), rng); // using ints and limited range to get duplicates
 
 size_t g_num_elements = 1000;
@@ -48,9 +49,9 @@ BASELINE(int_10_range_0_10, set, g_samples, g_iterations)
 		set.insert(g_int_elements[i]);
 
 	// Just to make sure it works
-	/*std::cout << std::endl;
-	for (auto e : set)
-		std::cout << e << "\n";*/
+	// std::cout << std::endl;
+	// for (auto e : set)
+	// 	std::cout << e << "\n";
 }
 
 
@@ -62,12 +63,13 @@ BENCHMARK(int_10_range_0_10, unique_vector, g_samples, g_iterations)
 	for (size_t i = 0; i < 10; ++i)
 		vec.emplace_back(g_int_elements[i]);
 
+	std::sort(vec.begin(), vec.end());
 	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 
 	// Just to make sure it works
-	/*std::cout << std::endl;
-	for(auto e : vec)
-		std::cout << e << "\n";*/
+	// std::cout << std::endl;
+	// for(auto e : vec)
+	// 	std::cout << e << "\n";
 }
 
 
@@ -89,6 +91,7 @@ BENCHMARK(int_100_range_0_10, unique_vector, g_samples, g_iterations)
 	for (size_t i = 0; i < 100; ++i)
 		vec.emplace_back(g_int_elements[i]);
 
+	std::sort(vec.begin(), vec.end());
 	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 }
 
@@ -111,6 +114,7 @@ BENCHMARK(int_1000_range_0_10, unique_vector, g_samples, g_iterations)
 	for (size_t i = 0; i < 1000; ++i)
 		vec.emplace_back(g_int_elements[i]);
 
+	std::sort(vec.begin(), vec.end());
 	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 }
 
@@ -133,5 +137,6 @@ BENCHMARK(int_10000_range_0_10, unique_vector, g_samples, g_iterations)
 	for (size_t i = 0; i < 10000; ++i)
 		vec.emplace_back(g_int_elements[i]);
 
+	std::sort(vec.begin(), vec.end());
 	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 }
