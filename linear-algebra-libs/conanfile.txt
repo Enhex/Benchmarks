@@ -2,6 +2,7 @@
 Celero/master@enhex/stable
 eigen/3.4.0
 glm/0.9.9.8
+fastor/master@enhex/stable
 
 [generators]
 premake

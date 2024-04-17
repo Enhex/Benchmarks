@@ -21,7 +21,7 @@ workspace(project_name)
 	project(project_name)
 		kind "ConsoleApp"
 		language "C++"
-		cppdialect "C++17"
+		cppdialect "C++20"
 		targetdir = location_dir .. "bin/%{cfg.buildcfg}"
 
 		files{
@@ -33,6 +33,8 @@ workspace(project_name)
 		}
 
 		defines{"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"}
+
+		vectorextensions "AVX2"
 
 		filter "configurations:Debug"
 			defines { "DEBUG" }

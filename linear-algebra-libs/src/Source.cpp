@@ -8,6 +8,11 @@
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
 
+#include<Fastor/Fastor.h>
+
+using fastor_vector3_t = Fastor::Tensor<float,3>;
+//using fastor_vector3_t = Fastor::SIMDVector<float,3>;
+
 ///
 /// This is the main(int argc, char** argv) for the entire celero program.
 /// You can write your own, or use this macro to insert the standard one into the project.
@@ -132,6 +137,42 @@ public:
 	}
 };
 
+class FastorVec3Fixture : public celero::TestFixture
+{
+public:
+	FastorVec3Fixture()
+	{
+		rng.seed(0);
+	}
+
+
+	std::vector<fastor_vector3_t> vecs;
+
+
+	std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
+	{
+		std::vector<celero::TestFixture::ExperimentValue> problemSpace;
+		const int totalNumberOfTests = number_of_tests;
+
+		//for (int i = 0; i < totalNumberOfTests; i++)
+		//	problemSpace.emplace_back(int64_t(pow(2, i)));
+		problemSpace.emplace_back(10);
+
+		return problemSpace;
+	}
+
+	/// Before each run, build a vector of random integers.
+	void setUp(celero::TestFixture::ExperimentValue const& experimentValue) override
+	{
+		vecs.reserve(experimentValue.Value);
+
+		auto random = std::bind(std::uniform_real_distribution<float>(std::numeric_limits<float>::min(), std::numeric_limits<float>::max()), rng);
+
+		for (decltype(experimentValue.Value) i = 0; i < experimentValue.Value; ++i)
+			vecs.emplace_back(fastor_vector3_t{random(), random(), random()});
+	}
+};
+
 class EigenVec4Fixture : public celero::TestFixture
 {
 public:
@@ -215,7 +256,12 @@ BASELINE_F(Vector3_addition, GLM, GLM_Vec3Fixture, g_samples, g_iterations)
 
 BENCHMARK_F(Vector3_addition, Eigen, EigenVec3Fixture, g_samples, g_iterations)
 {
-	celero::DoNotOptimizeAway(vecs[0] + vecs[1]);
+	celero::DoNotOptimizeAway((vecs[0] + vecs[1]).eval());
+}
+
+BENCHMARK_F(Vector3_addition, Fastor, FastorVec3Fixture, g_samples, g_iterations)
+{
+	celero::DoNotOptimizeAway(Fastor::evaluate(vecs[0] + vecs[1]));
 }
 
 
@@ -320,6 +366,11 @@ BASELINE_F(Vector3_dot, GLM, GLM_Vec3Fixture, g_samples, g_iterations)
 }
 
 BENCHMARK_F(Vector3_dot, Eigen, EigenVec3Fixture, g_samples, g_iterations)
+{
+	celero::DoNotOptimizeAway(vecs[0].dot(vecs[1]).eval());
+}
+
+BENCHMARK_F(Vector3_dot, Fastor, FastorVec3Fixture, g_samples, g_iterations)
 {
 	celero::DoNotOptimizeAway(vecs[0].dot(vecs[1]));
 }
