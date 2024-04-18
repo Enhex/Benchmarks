@@ -1,10 +1,11 @@
 #include <celero/Celero.h>
 
-#include <random>
-#include <limits>
-#include <set>
-#include <vector>
 #include <algorithm>
+#include <limits>
+#include <random>
+#include <set>
+#include <unordered_set>
+#include <vector>
 
 #include <iostream>
 
@@ -15,7 +16,7 @@
 ///
 //CELERO_MAIN
 
-constexpr int g_samples = 10;
+constexpr int g_samples = 20;
 constexpr int g_iterations = 2000;
 
 
@@ -40,7 +41,7 @@ int main(int argc, char** argv)
 }
 
 
-
+// 10
 BASELINE(int_10_range_0_10, set, g_samples, g_iterations)
 {
 	std::set<int> set;
@@ -55,7 +56,20 @@ BASELINE(int_10_range_0_10, set, g_samples, g_iterations)
 }
 
 
-// 10
+BENCHMARK(int_10_range_0_10, uset, g_samples, g_iterations)
+{
+	std::set<int> set;
+
+	for (size_t i = 0; i < 10; ++i)
+		set.insert(g_int_elements[i]);
+
+	// Just to make sure it works
+	// std::cout << std::endl;
+	// for (auto e : set)
+	// 	std::cout << e << "\n";
+}
+
+
 BENCHMARK(int_10_range_0_10, unique_vector, g_samples, g_iterations)
 {
 	std::vector<int> vec;
@@ -84,6 +98,15 @@ BASELINE(int_100_range_0_10, set, g_samples, g_iterations)
 }
 
 
+BENCHMARK(int_100_range_0_10, uset, g_samples, g_iterations)
+{
+	std::unordered_set<int> set;
+
+	for (size_t i = 0; i < 100; ++i)
+		set.insert(g_int_elements[i]);
+}
+
+
 BENCHMARK(int_100_range_0_10, unique_vector, g_samples, g_iterations)
 {
 	std::vector<int> vec;
@@ -96,11 +119,48 @@ BENCHMARK(int_100_range_0_10, unique_vector, g_samples, g_iterations)
 }
 
 
+BENCHMARK(int_100_range_0_10, vector_uset, g_samples, g_iterations)
+{
+	std::unordered_set<int> set;
+	std::vector<int> vec;
+
+	for (size_t i = 0; i < 100; ++i){
+		auto const x = g_int_elements[i];
+		if(set.count(x))
+			continue;
+		set.insert(x);
+		vec.emplace_back(x);
+	}
+}
+
+
+BENCHMARK(int_100_range_0_10, uset_vec_copy, g_samples, g_iterations)
+{
+	std::unordered_set<int> set;
+
+	for (size_t i = 0; i < 100; ++i){
+		set.insert(g_int_elements[i]);
+	}
+
+	std::vector<int> vec;
+	vec.insert(vec.begin(), set.begin(), set.end());
+}
+
+
 
 // 1,000
 BASELINE(int_1000_range_0_10, set, g_samples, g_iterations)
 {
 	std::set<int> set;
+
+	for (size_t i = 0; i < 1000; ++i)
+		set.insert(g_int_elements[i]);
+}
+
+
+BENCHMARK(int_1000_range_0_10, uset, g_samples, g_iterations)
+{
+	std::unordered_set<int> set;
 
 	for (size_t i = 0; i < 1000; ++i)
 		set.insert(g_int_elements[i]);
@@ -124,6 +184,15 @@ BENCHMARK(int_1000_range_0_10, unique_vector, g_samples, g_iterations)
 BASELINE(int_10000_range_0_10, set, g_samples, g_iterations)
 {
 	std::set<int> set;
+
+	for (size_t i = 0; i < 10000; ++i)
+		set.insert(g_int_elements[i]);
+}
+
+
+BENCHMARK(int_10000_range_0_10, uset, g_samples, g_iterations)
+{
+	std::unordered_set<int> set;
 
 	for (size_t i = 0; i < 10000; ++i)
 		set.insert(g_int_elements[i]);
