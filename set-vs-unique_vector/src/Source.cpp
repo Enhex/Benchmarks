@@ -143,7 +143,7 @@ BENCHMARK(int_100_range_0_10, uset_vec_copy, g_samples, g_iterations)
 	}
 
 	std::vector<int> vec;
-	vec.insert(vec.begin(), set.begin(), set.end());
+	vec.insert(vec.end(), set.begin(), set.end());
 }
 
 
